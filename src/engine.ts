@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "mock-key",
+  apiKey: process.env.OPENAI_API_KEY!,
 });
 
 export async function runEngine(
@@ -49,7 +49,7 @@ Respond ONLY with the JSON object.
   try {
     const completion = await openai.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "gpt-5.1",
+      model: "gpt-4",
       temperature: 0.7,
     });
 
