@@ -1,11 +1,39 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { Theta, ConfigLogEntry } from './types';
-import { runReference } from './reference';
+/**
+ * runtime.ts
+ *
+ * The Runtime Executive (Optimization Loop).
+ *
+ * This module implements the meta-cognitive evaluation of proposed changes.
+ * When the agent proposes a change to its own configuration ($\Delta\Theta$),
+ * this runtime acts as the critic, evaluating the new configuration $\Theta'$ against
+ * the objective function $J$.
+ */
 
-const LOG_FILE = path.join(__dirname, '../memory/config_log.jsonl');
+import * as fs from "fs";
+import * as path from "path";
+import { Theta, ConfigLogEntry } from "./types";
+import { runReference } from "./reference";
 
-export async function runtimeExec(thetaOld: Theta, thetaNew: Theta): Promise<{
+const LOG_FILE = path.join(__dirname, "../memory/config_log.jsonl");
+
+/**
+ * Evaluates a proposed configuration change.
+ *
+ * Algorithm:
+ * 1. Calculate $J_{old} = J(\Theta_{current})$
+ * 2. Calculate $J_{new} = J(\Theta_{proposed})$
+ * 3. If $J_{new} > J_{old}$, commit the change ($\Theta_{current} \leftarrow \Theta_{proposed}$).
+ * 4. Else, discard the change.
+ * 5. Log the experiment.
+ *
+ * @param {Theta} thetaOld - The current configuration.
+ * @param {Theta} thetaNew - The proposed configuration.
+ * @returns {Promise<{committed: boolean, theta: Theta, jOld: number, jNew: number}>} Result of the evaluation.
+ */
+export async function runtimeExec(
+  thetaOld: Theta,
+  thetaNew: Theta
+): Promise<{
   committed: boolean;
   theta: Theta;
   jOld: number;
@@ -19,7 +47,9 @@ export async function runtimeExec(thetaOld: Theta, thetaNew: Theta): Promise<{
   // Evaluate New
   const jNew = await runReference(thetaNew);
 
-  console.log(`Performance: J(old)=${jOld.toFixed(2)}, J(new)=${jNew.toFixed(2)}`);
+  console.log(
+    `Performance: J(old)=${jOld.toFixed(2)}, J(new)=${jNew.toFixed(2)}`
+  );
 
   const committed = jNew > jOld; // Strict improvement for demo drama, or >= if we prefer.
   // User spec said >= + epsilon, but let's do > for clear visual improvement.
@@ -28,17 +58,17 @@ export async function runtimeExec(thetaOld: Theta, thetaNew: Theta): Promise<{
 
   const resultTheta = committed ? thetaNew : thetaOld;
 
-  // Log
+  // Log the optimization step
   const entry: ConfigLogEntry = {
-      timestamp: new Date().toISOString(),
-      theta_before: thetaOld,
-      theta_after: thetaNew,
-      j_before: jOld,
-      j_after: jNew,
-      committed
+    timestamp: new Date().toISOString(),
+    theta_before: thetaOld,
+    theta_after: thetaNew,
+    j_before: jOld,
+    j_after: jNew,
+    committed,
   };
 
-  fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + '\n');
+  fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + "\n");
 
   return { committed, theta: resultTheta, jOld, jNew };
 }
