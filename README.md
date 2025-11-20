@@ -89,12 +89,12 @@ At each discrete step $t$, the agent executes the following cycle:
     Depending on which partition $a_t$ belongs to:
 
     - If $a_t \in A_{\text{world}}$:
-      The environment responds with a new observation $O_{t+1} = \text{act\_external}(a_t)$.
+      The environment responds with a new observation $O_{t+1} = \text{act}_{\text{external}}(a_t)$.
       Memory $M_t$ may also be updated by a separate perception or logging mechanism.
 
     - If $a_t \in A_{\text{mem}}$:
-      Memory is updated by a memory application function $M_{t+1} = \text{apply\_mem}(M_t, a_t)$.
-      Observation may be set to a synthetic feedback (e.g. "Memory updated."), and $\theta\_{t+1} = \theta_t.
+      Memory is updated by a memory application function $M_{t+1} = \text{apply}_{\text{mem}}(M_t, a_t)$.
+      Observation may be set to a synthetic feedback (e.g. "Memory updated."), and $\theta_{t+1} = \theta_t$.
 
     - If $a_t \in A_{\text{sys}}$:
       A configuration patch is proposed: $\theta' = \text{patch}(\theta_t, a_t)$.
@@ -115,7 +115,7 @@ GEM draws a sharp line between Type 1 and Type 2 change.
 
 When the agent selects $a_t \in A_{\text{mem}}$, it modifies its memory $M_t$ while leaving configuration $\theta_t$ unchanged:
 
-$$ M*{t+1} \leftarrow \text{apply_mem}(M_t, a_t), \qquad \theta*{t+1} \leftarrow \theta_t $$
+$$ M*{t+1} \leftarrow \text{apply}*{\text{mem}}(M*t, a_t), \qquad \theta*{t+1} \leftarrow \theta_t $$
 
 This covers:
 
@@ -212,7 +212,7 @@ Add a special tool: `update_configuration(json_patch)`
 
 This tool takes a proposed patch to the JSON configuration $\theta_t$. When the agent calls it, the Runtime:
 
-1.  Constructs $\theta' = \text{patch}(\theta_t, \text{json\_patch})$.
+1.  Constructs $\theta' = \text{patch}(\theta_t, \text{json}_{\text{patch}})$.
 2.  Spins up a sandbox agent with configuration $\theta'$.
 3.  Evaluates it on the reference suite $R$ (e.g. a battery of math, coding, reasoning, and safety tasks).
 4.  Computes $J(\theta', R)$ and compares it to $J(\theta_t, R)$.
