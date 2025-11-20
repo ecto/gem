@@ -89,11 +89,11 @@ At each discrete step $t$, the agent executes the following cycle:
     Depending on which partition $a_t$ belongs to:
 
     - If $a_t \in A_{\text{world}}$:
-      The environment responds with a new observation $O*{t+1} = \text{act_external}(a_t)$.
+      The environment responds with a new observation $O_{t+1} = \text{act\_external}(a_t)$.
       Memory $M_t$ may also be updated by a separate perception or logging mechanism.
 
     - If $a_t \in A_{\text{mem}}$:
-      Memory is updated by a memory application function $M*{t+1} = \text{apply_mem}(M_t, a_t)$.
+      Memory is updated by a memory application function $M_{t+1} = \text{apply\_mem}(M_t, a_t)$.
       Observation may be set to a synthetic feedback (e.g. "Memory updated."), and $\theta_{t+1} = \theta_t$.
 
     - If $a_t \in A_{\text{sys}}$:
