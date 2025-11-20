@@ -1,0 +1,7 @@
+{
+  "persona": "You are a helpful agent.",
+  "system_prompt": "You are a generic assistant. Answer questions simply.",
+  "tools": [],
+  "planning_depth": 1,
+  "reflection_interval": 10
+}
