@@ -28,7 +28,7 @@ GEM treats the agent’s configuration (its “source code”) as mutable data, 
 
 We define an agent at time $t$ as a tuple of Configuration, Memory, and Last Observation:
 
-$$ \text{Agent}_t = (\theta_t, M_t, O_t) $$
+$$ \text{Agent}\_t = (\theta_t, M_t, O_t) $$
 
 ### 2.1 Components
 
@@ -56,7 +56,7 @@ Intuitively: $\theta$ and $M$ are the “data,” $f$ is the “kernel.” Chang
 
 Standard reinforcement learning treats the action space $A$ as targeting only the external world. GEM partitions the action space into three disjoint subsets:
 
-$$ A = A_{\text{world}} \cup A_{\text{mem}} \cup A_{\text{sys}} $$
+$$ A = A*{\text{world}} \cup A*{\text{mem}} \cup A\_{\text{sys}} $$
 
 1.  **$A_{\text{world}}$ (Act)**: Actions that affect the external environment.
 
@@ -89,11 +89,11 @@ At each discrete step $t$, the agent executes the following cycle:
     Depending on which partition $a_t$ belongs to:
 
     - If $a_t \in A_{\text{world}}$:
-      The environment responds with a new observation $O_{t+1} = \text{act\_external}(a_t)$.
+      The environment responds with a new observation $O*{t+1} = \text{act_external}(a_t)$.
       Memory $M_t$ may also be updated by a separate perception or logging mechanism.
 
     - If $a_t \in A_{\text{mem}}$:
-      Memory is updated by a memory application function $M_{t+1} = \text{apply\_mem}(M_t, a_t)$.
+      Memory is updated by a memory application function $M*{t+1} = \text{apply_mem}(M_t, a_t)$.
       Observation may be set to a synthetic feedback (e.g. "Memory updated."), and $\theta_{t+1} = \theta_t$.
 
     - If $a_t \in A_{\text{sys}}$:
@@ -115,7 +115,7 @@ GEM draws a sharp line between Type 1 and Type 2 change.
 
 When the agent selects $a_t \in A_{\text{mem}}$, it modifies its memory $M_t$ while leaving configuration $\theta_t$ unchanged:
 
-$$ M_{t+1} \leftarrow \text{apply\_mem}(M_t, a_t), \qquad \theta_{t+1} \leftarrow \theta_t $$
+$$ M*{t+1} \leftarrow \text{apply_mem}(M_t, a_t), \qquad \theta*{t+1} \leftarrow \theta_t $$
 
 This covers:
 
@@ -158,7 +158,7 @@ $$ J(\theta', R) \quad\text{vs}\quad J(\theta_t, R) $$
 
 The structural update rule is:
 
-$$ \theta_{t+1} = \begin{cases} \theta' & \text{if } J(\theta', R) \ge J(\theta_t, R) + \varepsilon \quad \text{(Commit)} \\ \theta_t & \text{otherwise} \quad \text{(Rollback)} \end{cases} $$
+$$ \theta\_{t+1} = \begin{cases} \theta' & \text{if } J(\theta', R) \ge J(\theta_t, R) + \varepsilon \quad \text{(Commit)} \\ \theta_t & \text{otherwise} \quad \text{(Rollback)} \end{cases} $$
 
 for some margin $\varepsilon \ge 0$.
 
